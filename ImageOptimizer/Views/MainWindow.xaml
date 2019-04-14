@@ -1,0 +1,62 @@
+﻿<Window x:Class="ImageOptimizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:helpers="clr-namespace:ImageOptimizer.Helpers"
+        xmlns:vm="clr-namespace:ImageOptimizer.ViewModels"
+        DataContext="{DynamicResource MainViewModel}"
+        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}"
+        mc:Ignorable="d"
+        Icon="/Resource/ImageOptimizer.ico"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Image Optimizer" Height="450" Width="800" ResizeMode = "NoResize">
+    <Window.Resources>
+        <vm:MainViewModel x:Key="MainViewModel"/>
+    </Window.Resources>
+    <Grid Margin="20">
+        <StackPanel Margin="0,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="300" Width="300">
+            <Image Name="imageSource" Source="{Binding CompressImage.SourceFileFullPath}" />
+            <StackPanel Orientation="Horizontal">
+                <Label>Size:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.SourceSize}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label>Url:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.SourceUrl}" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="0,125,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding ElementName=imageSource, Path=Source.HasValue}">
+                <materialDesign:PackIcon Kind="Compress" />
+                <TextBlock Text="Compressing ..." Margin="5,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,125,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding ElementName=imageSource, Path=Source.HasValue}">
+                <Button Name="btnSetting" Command="{Binding SettingCommand}" Content="{materialDesign:PackIcon Settings}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="25" Margin="0,0,5,0" ToolTip="Setting" Style="{StaticResource MaterialDesignFloatingActionButton}"/>
+                <Button Name="btnAbout" Command="{Binding AboutCommand}" Content="{materialDesign:PackIcon Information}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="25" Margin="5,0,0,0" ToolTip="Information" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="0,25,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="300" Width="300">
+            <Image Name="imageDestination" Source="{Binding CompressImage.DestinationFileFullPath}" />
+            <StackPanel Orientation="Horizontal">
+                <Label>Size:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.DestinationSize}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label>Saved:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.PercentageSaved}" />
+            </StackPanel>
+        </StackPanel>
+
+        <Button Name="btnCancel" Command="{Binding CancelCommand}" Content="Close" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+        <ProgressBar Name="progress" Minimum="0" Maximum="100" Value="{Binding CurrentProgress, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="500" Height="30" />
+        <Button Name="btnOptimize" Command="{Binding OptimizeCommand}" Content="Optimize" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100"  Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+    </Grid>
+</Window>

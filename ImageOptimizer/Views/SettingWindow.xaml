@@ -1,0 +1,32 @@
+﻿<Window x:Class="ImageOptimizer.SettingWindow" WindowStartupLocation="CenterScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:ImageOptimizer.Helpers"
+        xmlns:vm="clr-namespace:ImageOptimizer.ViewModels"
+        DataContext="{DynamicResource SettingViewModel}"
+        helpers:DialogCloser.DialogResult="{Binding CloseWindowFlag}"
+        mc:Ignorable="d"
+        Icon="/Resource/ImageOptimizer.ico"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Setting" Name="settings" Height="300" Width="400" ResizeMode = "NoResize">
+    <Window.Resources>
+        <vm:SettingViewModel x:Key="SettingViewModel" />
+    </Window.Resources>
+    <Grid Margin="20">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Label>Quality:</Label>
+            <TextBox Text="{Binding Quality}" Name="txtQuality" VerticalAlignment="Center" Width="250" Margin="10,0,0,0" />
+        </StackPanel>
+        
+        <Button Name="btnCancel" Command="{Binding CancelCommand}" Content="Close" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Style="{StaticResource MaterialDesignRaisedLightButton}" />
+        <Button Name="btnApply" Command="{Binding ApplyCommand}" Content="Apply" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100"  Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+    </Grid>
+</Window>
