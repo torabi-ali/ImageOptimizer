@@ -1,7 +1,9 @@
 ﻿using ImageOptimizer.Helpers;
 using ImageOptimizer.Model;
 using Microsoft.Win32;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 
 namespace ImageOptimizer.ViewModels
@@ -13,6 +15,7 @@ namespace ImageOptimizer.ViewModels
         private Optimize Optimize;
 
         private CompressImage _compressImage;
+        private readonly List<CompressImage> CompressImageCollection = new List<CompressImage>();
         public CompressImage CompressImage
         {
             get => _compressImage;
@@ -51,7 +54,7 @@ namespace ImageOptimizer.ViewModels
 
             var fileDialog = new OpenFileDialog
             {
-                Multiselect = false,
+                Multiselect = true,
                 Title = "Select your image",
                 Filter = "Image Files | *.jpg; *.png; *.gif; *.tif; *.bmp",
                 InitialDirectory = Properties.Settings.Default.DefaultPath,
@@ -59,7 +62,11 @@ namespace ImageOptimizer.ViewModels
             var result = fileDialog.ShowDialog();
             if (result == true)
             {
-                CompressImage = new CompressImage(fileDialog.FileName);
+                foreach (var file in fileDialog.FileNames)
+                {
+                    var compressImage = new CompressImage(file);
+                    CompressImageCollection.Add(compressImage);
+                }
                 bw.RunWorkerAsync();
             }
         }
@@ -82,20 +89,29 @@ namespace ImageOptimizer.ViewModels
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Optimize = new Optimize(CompressImage);
-
-            var upload = Optimize.VgyUpload();
-            if (upload)
+            var progressChunk = 100.0 / CompressImageCollection.Count;
+            foreach (var image in CompressImageCollection)
             {
-                CurrentProgress = 50;
-                RaisePropertyChanged("CompressImage");
-                var optimized = Optimize.ResmushOptimize();
-                if (optimized)
+                CompressImage = image;
+                Optimize = new Optimize(CompressImage);
+
+                var upload = Optimize.VgyUpload();
+                if (upload)
                 {
-                    CurrentProgress = 75;
-                    Optimize.ResmushDownload();
-                    //VgyDelete(); //Not implemented yet
                     RaisePropertyChanged("CompressImage");
+                    CurrentProgress += progressChunk * 50 / 100;
+                    var optimized = Optimize.ResmushOptimize();
+                    if (optimized)
+                    {
+                        CurrentProgress += progressChunk * 25 / 100;
+                        Optimize.ResmushDownload();
+                        //VgyDelete(); //Not implemented yet
+
+                        RaisePropertyChanged("CompressImage");
+                        CurrentProgress += progressChunk * 25 / 100;
+
+                        Thread.Sleep(500); //Wait for user to observe the changes
+                    }
                 }
             }
         }
@@ -108,7 +124,7 @@ namespace ImageOptimizer.ViewModels
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             CurrentProgress = 100;
-            MessageBox.Show("Image is Optimized.", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Everything has been optimized.", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
