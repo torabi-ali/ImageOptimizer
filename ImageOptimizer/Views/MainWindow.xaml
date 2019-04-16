@@ -34,11 +34,16 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" Margin="0,125,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding ElementName=imageSource, Path=Source.HasValue}">
-                <materialDesign:PackIcon Kind="Compress" />
-                <TextBlock Text="Compressing ..." Margin="5,0,0,0" />
+            <StackPanel Orientation="Horizontal" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
+                    <Border BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="1">
+                        <materialDesign:Card Padding="3, 10, 3, 13">
+                            <TextBlock><materialDesign:PackIcon Kind="AddToPhotos"/> Compressing ... </TextBlock>
+                        </materialDesign:Card>
+                    </Border>
+                </materialDesign:TransitioningContent>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,125,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="{Binding ElementName=imageSource, Path=Source.HasValue}">
+            <StackPanel Orientation="Horizontal" Margin="0,125,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Button Name="btnSetting" Command="{Binding SettingCommand}" Content="{materialDesign:PackIcon Settings}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="25" Margin="0,0,5,0" ToolTip="Setting" Style="{StaticResource MaterialDesignFloatingActionButton}"/>
                 <Button Name="btnAbout" Command="{Binding AboutCommand}" Content="{materialDesign:PackIcon Information}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="25" Margin="5,0,0,0" ToolTip="Information" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"/>
             </StackPanel>

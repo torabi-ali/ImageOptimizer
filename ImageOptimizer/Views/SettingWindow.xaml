@@ -27,6 +27,6 @@
         </StackPanel>
         
         <Button Name="btnCancel" Command="{Binding CancelCommand}" Content="Close" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Style="{StaticResource MaterialDesignRaisedLightButton}" />
-        <Button Name="btnApply" Command="{Binding ApplyCommand}" Content="Apply" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100"  Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+        <Button Name="btnApply" Command="{Binding ApplyCommand}" Content="Apply" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" IsEnabled="{Binding ElementName=txtQuality, Path=Text.Length, Mode=OneWay}" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
     </Grid>
 </Window>

@@ -1,8 +1,11 @@
 ﻿using ImageOptimizer.Helpers;
 using ImageOptimizer.Model;
+using ImageOptimizer.Utility;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 
@@ -73,7 +76,18 @@ namespace ImageOptimizer.ViewModels
 
         private void About(object parameter)
         {
+            var myProcess = new Process();
 
+            try
+            {
+                myProcess.StartInfo.UseShellExecute = true;
+                myProcess.StartInfo.FileName = "https://github.com/torabi-ali/ImageOptimizer";
+                myProcess.Start();
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
         }
 
         private void Setting(object parameter)

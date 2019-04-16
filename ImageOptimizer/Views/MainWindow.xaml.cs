@@ -38,5 +38,10 @@ namespace ImageOptimizer
                 Directory.CreateDirectory(Properties.Settings.Default.DefaultPath);
             }
         }
+
+        private void ImageSource_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+
+        }
     }
 }
