@@ -62,7 +62,6 @@ namespace ImageOptimizer.ViewModels
                 Multiselect = true,
                 Title = "Select your image",
                 Filter = "Image Files | *.jpg; *.png; *.gif; *.tif; *.bmp",
-                InitialDirectory = Properties.Settings.Default.DefaultPath,
             };
             var result = fileDialog.ShowDialog();
             if (result == true)
