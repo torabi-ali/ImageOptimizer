@@ -9,18 +9,18 @@ namespace ImageOptimizer.Helpers
 {
     public static class LogException
     {
-        private static string fileName = $"{Properties.Settings.Default.DefaultPath}{Application.ResourceAssembly.GetName().Name}.log";
+        private static readonly string fileName = $"{Application.ResourceAssembly.GetName().Name}.log";
 
         public static void Log(this Exception ex)
         {
             StringBuilder error = new StringBuilder();
 
             error.AppendLine("Date:                       " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-            error.AppendLine("Computer name:              " + Environment.MachineName);
-            error.AppendLine("User name:                  " + Environment.UserName);
+            error.AppendLine("Computer Name:              " + Environment.MachineName);
+            error.AppendLine("User Name:                  " + Environment.UserName);
             error.AppendLine("OS:                         " + Environment.OSVersion.ToString());
             error.AppendLine("Culture:                    " + CultureInfo.CurrentCulture.Name);
-            error.AppendLine("App up time:                " + (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString());
+            error.AppendLine("App UpTime:                " + (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString());
             error.AppendLine("");
 
             error.AppendLine("Exception Message:          " + ex.Message);
@@ -35,17 +35,17 @@ namespace ImageOptimizer.Helpers
             error.AppendLine("Exception TargetSite:       " + ex.TargetSite);
             error.AppendLine("");
 
-            error.AppendLine("Exception InnerException:   " + ex.InnerException);
+            error.AppendLine("Exception InnerException:   " + ex.InnerException?.ToString().Replace("   ", "                            "));
             error.AppendLine("");
 
-            error.AppendLine("Stack StackTrace:           " + ex.StackTrace);
+            error.AppendLine("Stack StackTrace:           " + ex.StackTrace?.ToString().Replace("   ", "").Replace("\n", "                            "));
             error.AppendLine("");
 
-            error.AppendLine("Loaded Modules:");
+            error.AppendLine("Loaded Modules:             ");
             Process thisProcess = Process.GetCurrentProcess();
             foreach (ProcessModule module in thisProcess.Modules)
             {
-                error.AppendLine("\t" + module.FileName + " " + module.FileVersionInfo.FileVersion);
+                error.AppendLine("                            " + module.FileName + " " + module.FileVersionInfo.FileVersion);
             }
             error.AppendLine("\n- - - - - - - - - - * * * * * * * * * - - - - - - - - - -\n");
             error.Save();

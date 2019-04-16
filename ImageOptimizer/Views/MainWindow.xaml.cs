@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using static System.Environment;
 
 namespace ImageOptimizer
 {
@@ -10,7 +8,6 @@ namespace ImageOptimizer
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             Initialization();
@@ -25,23 +22,6 @@ namespace ImageOptimizer
         public void Initialization()
         {
             EventManager.RegisterClassHandler(typeof(TextBox), GotFocusEvent, new RoutedEventHandler(TextBox_GotFocus));
-
-            if (string.IsNullOrEmpty(Properties.Settings.Default.DefaultPath))
-            {
-                Properties.Settings.Default.DefaultPath = $"{GetFolderPath(SpecialFolder.Desktop)}\\Image Optimizer\\";
-                Properties.Settings.Default.Save();
-            }
-
-            bool exists = Directory.Exists(Properties.Settings.Default.DefaultPath);
-            if (!exists)
-            {
-                Directory.CreateDirectory(Properties.Settings.Default.DefaultPath);
-            }
-        }
-
-        private void ImageSource_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-
         }
     }
 }

@@ -27,11 +27,21 @@ namespace ImageOptimizer
         }
 
         #region Vgy
-        public bool VgyUpload()
+        public FunctionResult VgyUpload()
         {
             HttpContent content = new StringContent("image");
             var form = new MultipartFormDataContent();
-            var stream = new FileStream(compressImage.SourceFileFullPath, FileMode.Open);
+
+            FileStream stream;
+            try
+            {
+                stream = new FileStream(compressImage.SourceFileFullPath, FileMode.Open);
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+                return FunctionResult.FileAccessDenied;
+            }
 
             content = new StreamContent(stream);
             content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
@@ -56,17 +66,17 @@ namespace ImageOptimizer
                     compressImage.SourceUrl = vgyResult.image;
                     compressImage.DeleteUrl = vgyResult.delete;
                     compressImage.SourceSize = vgyResult.size;
-                    return true;
+                    return FunctionResult.Done;
                 }
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return false;
+                return FunctionResult.UploadFailed;
             }
         }
 
-        public void VgyDelete()
+        public FunctionResult VgyDelete()
         {
             var data = compressImage.DeleteUrl;
             var url = $"https://vgy.me/delete?{data}";
@@ -76,16 +86,18 @@ namespace ImageOptimizer
             {
                 var response = request.GetResponse() as HttpWebResponse;
                 var result = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                return FunctionResult.Done;
             }
             catch (Exception ex)
             {
                 ex.Log();
+                return FunctionResult.Error;
             }
         }
         #endregion
 
         #region Resmush
-        public bool ResmushOptimize()
+        public FunctionResult ResmushOptimize()
         {
             var data = $"img={compressImage.SourceUrl}&qlty={Properties.Settings.Default.Quality}";
             var url = $"http://api.resmush.it/ws.php?{data}";
@@ -106,17 +118,17 @@ namespace ImageOptimizer
                     compressImage.DestinationUrl = resmushResult.dest;
                     compressImage.DestinationSize = resmushResult.dest_size;
                     compressImage.CalculatePercentageSaved();
-                    return true;
+                    return FunctionResult.Done;
                 }
             }
             catch (Exception ex)
             {
                 ex.Log();
-                return false;
+                return FunctionResult.Error;
             }
         }
 
-        public void ResmushDownload()
+        public FunctionResult ResmushDownload()
         {
             try
             {
@@ -124,10 +136,12 @@ namespace ImageOptimizer
                 {
                     client.DownloadFile(compressImage.DestinationUrl, compressImage.DestinationFileFullPath);
                 }
+                return FunctionResult.Done;
             }
             catch (Exception ex)
             {
                 ex.Log();
+                return FunctionResult.DownloadFailed;
             }
         }
         #endregion

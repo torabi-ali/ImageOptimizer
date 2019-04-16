@@ -16,6 +16,7 @@ namespace ImageOptimizer.ViewModels
         #region Fields
         private static readonly BackgroundWorker bw = new BackgroundWorker();
         private Optimize Optimize;
+        private FunctionResult FunctionResult;
 
         private CompressImage _compressImage;
         private readonly List<CompressImage> CompressImageCollection = new List<CompressImage>();
@@ -53,6 +54,7 @@ namespace ImageOptimizer.ViewModels
         private void OptimizeImage(object parameter)
         {
             CurrentProgress = 0;
+            FunctionResult = 0;
             RaisePropertyChanged("CompressImage");
 
             var fileDialog = new OpenFileDialog
@@ -109,23 +111,32 @@ namespace ImageOptimizer.ViewModels
                 CompressImage = image;
                 Optimize = new Optimize(CompressImage);
 
-                var upload = Optimize.VgyUpload();
-                if (upload)
+                FunctionResult = Optimize.VgyUpload();
+                if (FunctionResult == FunctionResult.Done)
                 {
                     RaisePropertyChanged("CompressImage");
                     CurrentProgress += progressChunk * 50 / 100;
-                    var optimized = Optimize.ResmushOptimize();
-                    if (optimized)
+
+                    FunctionResult = Optimize.ResmushOptimize();
+                    if (FunctionResult == FunctionResult.Done)
                     {
                         CurrentProgress += progressChunk * 25 / 100;
-                        Optimize.ResmushDownload();
-                        //VgyDelete(); //Not implemented yet
 
-                        RaisePropertyChanged("CompressImage");
-                        CurrentProgress += progressChunk * 25 / 100;
+                        FunctionResult = Optimize.ResmushDownload();
+                        if (FunctionResult == FunctionResult.Done)
+                        {
+                            RaisePropertyChanged("CompressImage");
+                            CurrentProgress += progressChunk * 25 / 100;
 
-                        Thread.Sleep(500); //Wait for user to observe the changes
+                            //VgyDelete(); //Not implemented yet
+
+                            Thread.Sleep(500); //Wait for user to observe the changes
+                        }
                     }
+                }
+                if (FunctionResult != FunctionResult.Done)
+                {
+                    MessageBox.Show(FunctionResult.ToDisplay(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -137,8 +148,15 @@ namespace ImageOptimizer.ViewModels
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            CurrentProgress = 100;
-            MessageBox.Show("Everything has been optimized.", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (FunctionResult == FunctionResult.Done)
+            {
+                CurrentProgress = 100;
+                MessageBox.Show("Everything has been optimized.", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                CurrentProgress = 0;
+            }
         }
     }
 }
