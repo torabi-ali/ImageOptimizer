@@ -1,7 +1,7 @@
 [Setup]
 AppId={{9F5DD4BE-536C-4A56-AC59-779C164C6FAF}
 AppName=Image Optimizer
-AppVersion=1.3.1.0
+AppVersion=1.3.2.0
 AppVerName=Image Optimizer
 AppPublisher=Dipeh
 AppPublisherURL=https://Dipeh.ir
