@@ -9,7 +9,9 @@ namespace ImageOptimizer.Helpers
 {
     public static class LogException
     {
-        private static readonly string fileName = $"{Application.ResourceAssembly.GetName().Name}.log";
+        private static readonly string FILE_NAME = $"{Application.ResourceAssembly.GetName().Name}.log";
+        private static readonly string FILE_PATH = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\{Properties.Settings.Default.CompanyName}";
+        private static readonly string FULL_FILE_PATH = $"{FILE_PATH}\\{FILE_NAME}";
 
         public static void Log(this Exception ex)
         {
@@ -20,7 +22,7 @@ namespace ImageOptimizer.Helpers
             error.AppendLine("User Name:                  " + Environment.UserName);
             error.AppendLine("OS:                         " + Environment.OSVersion.ToString());
             error.AppendLine("Culture:                    " + CultureInfo.CurrentCulture.Name);
-            error.AppendLine("App UpTime:                " + (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString());
+            error.AppendLine("App UpTime:                 " + (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString());
             error.AppendLine("");
 
             error.AppendLine("Exception Message:          " + ex.Message);
@@ -53,7 +55,11 @@ namespace ImageOptimizer.Helpers
 
         public static void Save(this StringBuilder error)
         {
-            File.AppendAllText(fileName, error.ToString(), Encoding.UTF8);
+            if (!File.Exists(FULL_FILE_PATH))
+            {
+                File.Create(FULL_FILE_PATH).Close();
+            }
+            File.AppendAllText(FULL_FILE_PATH, error.ToString(), Encoding.UTF8);
         }
     }
 }

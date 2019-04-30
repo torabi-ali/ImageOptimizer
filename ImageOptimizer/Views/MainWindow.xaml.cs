@@ -23,5 +23,11 @@ namespace ImageOptimizer
         {
             EventManager.RegisterClassHandler(typeof(TextBox), GotFocusEvent, new RoutedEventHandler(TextBox_GotFocus));
         }
+
+        private void Url_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Clipboard.SetText(txtUrl.Text);
+            MessageBox.Show("Text Copied to Clipboard.");
+        }
     }
 }

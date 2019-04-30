@@ -18,6 +18,11 @@ namespace ImageOptimizer
         {
             compressImage = CompressImage;
 
+            if (compressImage.DestinationFileFullPath != null)
+            {
+                File.Delete(compressImage.DestinationFileFullPath);
+            }
+
             if (vgyClient.BaseAddress == null)
             {
                 vgyClient.BaseAddress = new Uri("https://vgy.me/");
@@ -118,6 +123,7 @@ namespace ImageOptimizer
                     compressImage.DestinationUrl = resmushResult.dest;
                     compressImage.DestinationSize = resmushResult.dest_size;
                     compressImage.CalculatePercentageSaved();
+                    compressImage.CalculateViewSize();
                     return FunctionResult.Done;
                 }
             }

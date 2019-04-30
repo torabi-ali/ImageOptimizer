@@ -5,5 +5,8 @@
     <Setting Name="Quality" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">90</Value>
     </Setting>
+    <Setting Name="CompanyName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Dipeh</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

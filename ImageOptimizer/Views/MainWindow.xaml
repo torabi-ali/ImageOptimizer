@@ -22,23 +22,32 @@
         <vm:MainViewModel x:Key="MainViewModel"/>
     </Window.Resources>
     <Grid Margin="20">
-        <StackPanel Margin="0,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="300" Width="300">
-            <Image Name="imageSource" Source="{Binding CompressImage.SourceFileFullPath}" />
-            <StackPanel Orientation="Horizontal">
-                <Label>Size:</Label>
-                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.SourceSize}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Url:</Label>
-                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.SourceUrl}" />
-            </StackPanel>
-        </StackPanel>
+        <GroupBox Header="Source Image" HorizontalAlignment="Left" VerticalAlignment="Top" Height="300" Width="300" Margin="5">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="290" Width="290">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image Name="imageSource" Source="{Binding CompressImage.SourceFileFullPath}" Width="290" Height="200" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" />
+                <Label Grid.Column="0" Grid.Row="1">Size:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.SourceSizeView}" Grid.Column="1" Grid.Row="1" />
+                <Label Grid.Column="0" Grid.Row="2">Url:</Label>
+                <materialDesign:Card Height="Auto" Width="Auto" Padding="3,2,0,2" Grid.Column="1" Grid.Row="2" ToolTip="Double-Click To Copy The Url" MouseDoubleClick="Url_MouseDoubleClick">
+                    <TextBlock Name="txtUrl" VerticalAlignment="Center" Text="{Binding CompressImage.SourceUrl}"/>
+                </materialDesign:Card>
+            </Grid>
+        </GroupBox>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Margin="0,100,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect FadeIn}">
                     <Border BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="1">
                         <materialDesign:Card Padding="3, 10, 3, 13">
-                            <TextBlock><materialDesign:PackIcon Kind="AddToPhotos"/> Compressing ... </TextBlock>
+                            <TextBlock><materialDesign:PackIcon Kind="AddToPhotos"/> Compressing ...</TextBlock>
                         </materialDesign:Card>
                     </Border>
                 </materialDesign:TransitioningContent>
@@ -48,17 +57,24 @@
                 <Button Name="btnAbout" Command="{Binding AboutCommand}" Content="{materialDesign:PackIcon Information}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="25" Margin="5,0,0,0" ToolTip="Information" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Margin="0,25,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="300" Width="300">
-            <Image Name="imageDestination" Source="{Binding CompressImage.DestinationFileFullPath}" />
-            <StackPanel Orientation="Horizontal">
-                <Label>Size:</Label>
-                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.DestinationSize}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label>Saved:</Label>
-                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.PercentageSaved}" />
-            </StackPanel>
-        </StackPanel>
+        <GroupBox Header="Compressed Image" HorizontalAlignment="Right" VerticalAlignment="Top" Height="300" Width="300" Margin="5">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="290" Width="290">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image Name="imageDestination" Source="{Binding CompressImage.DestinationFileFullPath}" Width="290" Height="200" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" />
+                <Label Grid.Column="0" Grid.Row="1">Size:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.DestinationSizeView}" Grid.Column="1" Grid.Row="1" />
+                <Label Grid.Column="0" Grid.Row="2">Saved:</Label>
+                <TextBlock VerticalAlignment="Center" Text="{Binding CompressImage.PercentageSaved}" Grid.Column="1" Grid.Row="2" />
+            </Grid>
+        </GroupBox>
 
         <Button Name="btnCancel" Command="{Binding CancelCommand}" Content="Close" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Style="{StaticResource MaterialDesignRaisedLightButton}" />
         <ProgressBar Name="progress" Minimum="0" Maximum="100" Value="{Binding CurrentProgress, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="500" Height="30" />

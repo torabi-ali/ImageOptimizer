@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageOptimizer.Utility;
+using System;
 using System.Linq;
 
 namespace ImageOptimizer.Model
@@ -11,11 +12,13 @@ namespace ImageOptimizer.Model
         public string SourceFileFullPath { get; set; }
         public string SourceUrl { get; set; }
         public int SourceSize { get; set; }
+        public string SourceSizeView { get; set; }
         public string DestinationFileName { get; }
         public string DestinationFilePath { get; }
         public string DestinationFileFullPath { get; }
         public string DestinationUrl { get; set; }
         public int DestinationSize { get; set; }
+        public string DestinationSizeView { get; set; }
         public string DeleteUrl { get; set; }
         public string PercentageSaved { get; set; }
 
@@ -43,6 +46,27 @@ namespace ImageOptimizer.Model
             {
                 PercentageSaved = $"{result / 100}%";
             }
+        }
+
+        public void CalculateViewSize()
+        {
+            var size = FileSize.Byte;
+            var tmp = SourceSize;
+            while (tmp > 1000)
+            {
+                tmp /= 1000;
+                size++;
+            }
+            SourceSizeView = $"{tmp} {size.ToDisplay()}";
+
+            size = FileSize.Byte;
+            tmp = DestinationSize;
+            while (tmp > 1000)
+            {
+                tmp /= 1000;
+                size++;
+            }
+            DestinationSizeView = $"{tmp} {size.ToDisplay()}";
         }
     }
 }
